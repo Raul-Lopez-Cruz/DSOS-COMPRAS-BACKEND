@@ -14,62 +14,72 @@ import java.util.Optional;
 @Service
 public class ProductoServiceImplement implements ProductoService {
 
-        private final Log LOG = LogFactory.getLog(ProductoService.class);
+    private final Log LOG = LogFactory.getLog(ProductoService.class);
 
-        @Autowired
-        private ProductoRepository productoRepository;
+    @Autowired
+    private ProductoRepository productoRepository;
 
-        public ProductoServiceImplement(ProductoRepository productoRepository) {
-            this.productoRepository = productoRepository;
+    public ProductoServiceImplement(ProductoRepository productoRepository) {
+        this.productoRepository = productoRepository;
+    }
+
+    @Override
+    public void vender(Integer id, Integer cantidad) {
+        Optional<ProductoModel> producto = productoRepository.findById(id);
+        if (producto.isPresent()) {
+            ProductoModel productoUpdate = producto.get();
+            productoUpdate.setStock(productoUpdate.getStock() - cantidad);
+            productoRepository.save(productoUpdate);
         }
+    }
 
-        @Override
-        public void vender(Integer id, Integer cantidad) {
-            Optional<ProductoModel> producto = productoRepository.findById(id);
-            if(producto.isPresent()){
-                ProductoModel productoUpdate = producto.get();
-                productoUpdate.setStock(productoUpdate.getStock()-cantidad);
-                productoRepository.save(productoUpdate);
-            }
+    @Override
+    public void devolver(int parseInt, int unidades) {
+        Optional<ProductoModel> producto = productoRepository.findById(parseInt);
+        if (producto.isPresent()) {
+            ProductoModel productoUpdate = producto.get();
+            productoUpdate.setStock(productoUpdate.getStock() + unidades);
+            productoRepository.save(productoUpdate);
         }
+    }
 
-        @Override
-        public void createProducto(ProductoModel producto) {
-            productoRepository.save(producto);
-        }
+    @Override
+    public void createProducto(ProductoModel producto) {
+        productoRepository.save(producto);
+    }
 
-        @Override
-        public void save(ProductoModel nuevoProducto) {
-            productoRepository.save(nuevoProducto);
-        }
+    @Override
+    public void save(ProductoModel nuevoProducto) {
+        productoRepository.save(nuevoProducto);
+    }
 
-        @Override
-        public void delete(Integer id) {
-            productoRepository.deleteById(id);
-        }
+    @Override
+    public void delete(Integer id) {
+        productoRepository.deleteById(id);
+    }
 
-        @Override
-        public void update(ProductoModel productoUpdate, Integer id) {
-            ProductoModel productoModel = productoRepository.findById(id)
-                    .orElseThrow(() -> new IllegalStateException("El producto no existe"));
-            productoModel.setTalla(productoUpdate.getTalla());
-            productoModel.setModelo(productoUpdate.getModelo());
-            productoModel.setColor(productoUpdate.getColor());
-            productoModel.setMarca(productoUpdate.getMarca());
-            productoModel.setPrecioCompra(productoUpdate.getPrecioCompra());
-            productoModel.setPrecioVenta(productoUpdate.getPrecioVenta());
-            productoModel.setStock(productoUpdate.getStock());
-            productoRepository.save(productoModel);
-        }
+    @Override
+    public void update(ProductoModel productoUpdate, Integer id) {
+        ProductoModel productoModel = productoRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("El producto no existe"));
+        productoModel.setTalla(productoUpdate.getTalla());
+        productoModel.setModelo(productoUpdate.getModelo());
+        productoModel.setColor(productoUpdate.getColor());
+        productoModel.setMarca(productoUpdate.getMarca());
+        productoModel.setPrecioCompra(productoUpdate.getPrecioCompra());
+        productoModel.setPrecioVenta(productoUpdate.getPrecioVenta());
+        productoModel.setStock(productoUpdate.getStock());
+        productoRepository.save(productoModel);
+    }
 
-        @Override
-        public Optional<ProductoModel> getById(Integer id) {
-            return productoRepository.findById(id);
-        }
+    @Override
+    public Optional<ProductoModel> getById(Integer id) {
+        return productoRepository.findById(id);
+    }
 
-        @Override
-        public List<ProductoModel> getAll() {
-            return productoRepository.findAll();
-        }
+    @Override
+    public List<ProductoModel> getAll() {
+        return productoRepository.findAll();
+    }
 }
 

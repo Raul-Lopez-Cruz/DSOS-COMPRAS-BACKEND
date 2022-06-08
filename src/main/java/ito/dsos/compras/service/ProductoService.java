@@ -23,5 +23,6 @@ public interface ProductoService {
 
     public void vender(Integer id, Integer cantidad);
 
+    void devolver(int id, int unidades);
 }
 

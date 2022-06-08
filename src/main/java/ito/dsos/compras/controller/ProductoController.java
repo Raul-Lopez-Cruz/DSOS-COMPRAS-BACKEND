@@ -47,7 +47,7 @@ public class ProductoController {
         response.put("httpCode", HttpStatus.NOT_FOUND.value());
         response.put("data", null);
         response.put("message", HttpStatus.NOT_FOUND.getReasonPhrase() + ": El producto no existe");
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     //Crea un producto
@@ -98,7 +98,6 @@ public class ProductoController {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 
     }
-
     //Actualiza las existencias de un producto
     @Transactional
     @PutMapping("/vender/{id}/{unidades}")
@@ -118,8 +117,12 @@ public class ProductoController {
             //if stock is enough, update stock
             productoService.vender(Integer.parseInt(id), Integer.parseInt(unidades));
             response.put("httpCode", HttpStatus.OK.value());
-            response.put("data", productoService.getById(Integer.parseInt(id)));
-            response.put("message", HttpStatus.OK.getReasonPhrase() + ": Se han vendido " + unidades + " unidades");
+            HashMap<String, Object> data = new HashMap<>();
+            //put into data stock and id
+            data.put("stock", producto.getStock());
+            data.put("id", producto.getIdProducto());
+            response.put("data", data);
+            response.put("message", HttpStatus.OK.getReasonPhrase() + ": Se ha vendido " + unidades + " unidades");
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         //If producto does not exist
@@ -127,6 +130,32 @@ public class ProductoController {
         response.put("message", HttpStatus.NOT_FOUND.getReasonPhrase() + ": El producto no existe");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+    //Actualiza las existencias de un producto
+    @Transactional
+    @PutMapping("/devolver/{id}/{unidades}")
+    public ResponseEntity<HashMap<String, Object>> devolver(@PathVariable String id, @PathVariable String unidades) {
+        response = new HashMap<>();
+        //check if producto exists
+        Optional<ProductoModel> productoModel = productoService.getById(Integer.parseInt(id));
+        if (productoModel.isPresent()) {
+            ProductoModel producto = productoModel.get();
+            //update stock
+            productoService.devolver(Integer.parseInt(id), Integer.parseInt(String.valueOf(unidades)));
+            response.put("httpCode", HttpStatus.OK.value());
+            HashMap<String, Object> data = new HashMap<>();
+            //put into data stock and id
+            data.put("stock", producto.getStock());
+            data.put("id", producto.getIdProducto());
+            response.put("data", data);
+            response.put("message", HttpStatus.OK.getReasonPhrase() + ": Se ha devuelto " + unidades + "unidad(es) al inventario.");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        //If producto does not exist
+        response.put("httpCode", HttpStatus.NOT_FOUND.value());
+        response.put("message", HttpStatus.NOT_FOUND.getReasonPhrase() + ": El producto no existe");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
 
     //Elimina un producto
     @DeleteMapping("/{id}")
