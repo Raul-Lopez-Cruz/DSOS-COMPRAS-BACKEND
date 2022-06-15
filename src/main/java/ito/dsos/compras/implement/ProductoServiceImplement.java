@@ -1,8 +1,8 @@
-package dsos.compras.tec.ComprasV2.implement;
+package ito.dsos.compras.implement;
 
-import dsos.compras.tec.ComprasV2.model.ProductoModel;
-import dsos.compras.tec.ComprasV2.repository.ProductoRepository;
-import dsos.compras.tec.ComprasV2.service.ProductoService;
+import ito.dsos.compras.model.ProductoModel;
+import ito.dsos.compras.repository.ProductoRepository;
+import ito.dsos.compras.service.ProductoService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
-package dsos.compras.tec.ComprasV2.service;
+package ito.dsos.compras.service;
 
-import dsos.compras.tec.ComprasV2.model.ProductoModel;
+import ito.dsos.compras.model.ProductoModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

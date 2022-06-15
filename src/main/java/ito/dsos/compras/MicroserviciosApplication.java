@@ -1,13 +1,13 @@
-package dsos.compras.tec.ComprasV2;
+package ito.dsos.compras;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ComprasV2Application {
+public class MicroserviciosApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ComprasV2Application.class, args);
+		SpringApplication.run(MicroserviciosApplication.class, args);
 	}
 
 }

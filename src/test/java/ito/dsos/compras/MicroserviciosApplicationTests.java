@@ -1,10 +1,10 @@
-package dsos.compras.tec.ComprasV2;
+package ito.dsos.compras;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ComprasV2ApplicationTests {
+class MicroserviciosApplicationTests {
 
 	@Test
 	void contextLoads() {

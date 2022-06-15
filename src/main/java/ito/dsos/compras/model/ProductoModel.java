@@ -1,4 +1,4 @@
-package dsos.compras.tec.ComprasV2.model;
+package ito.dsos.compras.model;
 
 import javax.persistence.*;
 
@@ -6,38 +6,36 @@ import javax.persistence.*;
 @Table(name = "ProductoModel")
 public class ProductoModel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "idProducto", nullable = false, updatable = false, length = 10)
-    private Integer idProducto;
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "idProducto", nullable = false, updatable = false, length = 10)
+        private Integer idProducto;
 
-    @Column(name = "precioCompra", nullable = false, length = 10, precision = 2)
-    private Double precioCompra;
+        @Column(name = "precioCompra", nullable = false, length = 10,precision = 2)
+        private Double precioCompra;
 
-    @Column(name = "precioVenta", nullable = false, length = 10, precision = 2)
-    private Double precioVenta;
+        @Column(name = "precioVenta", nullable = false, length = 10,precision = 2)
+        private Double precioVenta;
 
-    @Column(name = "talla", nullable = false, length = 2, precision = 1)
-    private Double talla;
+        @Column(name = "talla", nullable = false, length = 2, precision = 1)
+        private Double talla;
 
-    @Column(name = "stock", nullable = false, length = 10)
-    private Integer stock;
+        @Column(name = "stock", nullable = false, length = 10)
+        private Integer stock;
 
-    @Column(name = "color", nullable = false, length = 20)
-    private String color;
+        @Column(name="color", nullable = false, length = 20)
+        private String color;
 
-    @ManyToOne
-    @JoinColumn(name = "marca", nullable = false)
-    private MarcaModel marca;
+        @Column(name="marca", nullable = false)
+        private String marca;
 
-    @ManyToOne
-    @JoinColumn(name = "modelo", nullable = false)
-    private ModeloModel modelo;
+        @Column(name="modelo", nullable = false)
+        private String modelo;
 
     public ProductoModel() {
     }
 
-    public ProductoModel(Integer idProducto, Double precioCompra, Double precioVenta, Double talla, Integer stock, String color, MarcaModel marca, ModeloModel modelo) {
+    public ProductoModel(Integer idProducto, Double precioCompra, Double precioVenta, Double talla, Integer stock, String color, String marca, String modelo) {
         this.idProducto = idProducto;
         this.precioCompra = precioCompra;
         this.precioVenta = precioVenta;
@@ -96,20 +94,19 @@ public class ProductoModel {
         this.color = color;
     }
 
-    public MarcaModel getMarca() {
+    public String getMarca() {
         return marca;
     }
 
-    public void setMarca(MarcaModel marca) {
+    public void setMarca(String marca) {
         this.marca = marca;
     }
 
-    public ModeloModel getModelo() {
+    public String getModelo() {
         return modelo;
     }
 
-    public void setModelo(ModeloModel modelo) {
+    public void setModelo(String modelo) {
         this.modelo = modelo;
     }
-
 }
