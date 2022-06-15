@@ -1,7 +1,7 @@
-package ito.dsos.compras.controller;
+package dsos.compras.tec.ComprasV2.controller;
 
-import ito.dsos.compras.model.ProductoModel;
-import ito.dsos.compras.service.ProductoService;
+import dsos.compras.tec.ComprasV2.model.ProductoModel;
+import dsos.compras.tec.ComprasV2.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
