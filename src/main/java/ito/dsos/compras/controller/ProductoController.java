@@ -68,7 +68,6 @@ public class ProductoController {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         }
     }
-
     //Actualiza un producto (todos los atributos)
     @Transactional
     @PutMapping("/{id}")
@@ -77,26 +76,24 @@ public class ProductoController {
         Optional<ProductoModel> productoModel = productoService.getById(Integer.parseInt(id));
         //check if producto exists
         if (productoModel.isPresent()) {
-            //check if fields are not null
-            if (producto.getPrecioCompra() == null || producto.getStock() == null
-                    || producto.getColor() == null || producto.getMarca() == null || producto.getTalla() == null || producto.getModelo() == null
-                    || producto.getPrecioVenta() == null) {
-                response.put("httpCode", 400);
-                response.put("message", HttpStatus.BAD_REQUEST.getReasonPhrase() + ": Uno o más campos están vacíos");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-            } else {
-                productoService.update(producto, Integer.parseInt(id));
-                response.put("httpCode", HttpStatus.OK.value());
-                response.put("data", producto);
-                response.put("message", HttpStatus.OK.getReasonPhrase() + ": El producto se ha actualizado correctamente");
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            }
+            //check if all fields are filled, if not, use the old values
+            if (producto.getPrecioCompra() == null) producto.setPrecioCompra(productoModel.get().getPrecioCompra());
+            if (producto.getStock() == null) producto.setStock(productoModel.get().getStock());
+            if (producto.getColor() == null) producto.setColor(productoModel.get().getColor());
+            if (producto.getMarca() == null) producto.setMarca(productoModel.get().getMarca());
+            if (producto.getTalla() == null) producto.setTalla(productoModel.get().getTalla());
+            if (producto.getModelo() == null) producto.setModelo(productoModel.get().getModelo());
+            if (producto.getPrecioVenta() == null) producto.setPrecioVenta(productoModel.get().getPrecioVenta());
+            productoService.update(producto, Integer.parseInt(id));
+            response.put("httpCode", HttpStatus.OK.value());
+            response.put("data", producto);
+            response.put("message", HttpStatus.OK.getReasonPhrase() + ": El producto se ha actualizado correctamente");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("httpCode", HttpStatus.NOT_FOUND.value());
         response.put("data", null);
         response.put("message", HttpStatus.NOT_FOUND.getReasonPhrase() + ": El producto no existe");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-
     }
     //Actualiza las existencias de un producto
     @Transactional
