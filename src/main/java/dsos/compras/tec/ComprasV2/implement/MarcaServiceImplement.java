@@ -2,17 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package dsos.compras.tec.ComprasV2.implement;
+package ito.dsos.compras.implement;
 
-import dsos.compras.tec.ComprasV2.model.MarcaModel;
-import dsos.compras.tec.ComprasV2.repository.MarcaRepository;
-import dsos.compras.tec.ComprasV2.service.MarcaService;
-import java.util.List;
-import java.util.Optional;
+import ito.dsos.compras.model.MarcaModel;
+import ito.dsos.compras.repository.MarcaRepository;
+import ito.dsos.compras.service.MarcaService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  *

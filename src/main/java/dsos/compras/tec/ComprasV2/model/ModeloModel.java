@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package dsos.compras.tec.ComprasV2.model;
+package ito.dsos.compras.model;
 
 import javax.persistence.*;
 
@@ -23,11 +23,6 @@ public class ModeloModel {
     private String nombreModelo;
 
     public ModeloModel() {
-    }
-
-    public ModeloModel(Integer idModelo, String nombreModelo) {
-        this.idModelo = idModelo;
-        this.nombreModelo = nombreModelo;
     }
 
     public Integer getIdModelo() {

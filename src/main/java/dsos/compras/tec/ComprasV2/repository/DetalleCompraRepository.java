@@ -4,17 +4,19 @@
  */
 package ito.dsos.compras.repository;
 
-import ito.dsos.compras.model.MarcaModel;
+import ito.dsos.compras.model.CompraModel;
+import ito.dsos.compras.model.DetalleCompraModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.Optional;
+import java.util.Collection;
 
 /**
  *
  * @author Oscar
  */
-public interface MarcaRepository extends JpaRepository<MarcaModel, Integer> {
-    @Query("select s from MarcaModel s where s.nombreMarca = ?1")
-    Optional<MarcaModel> findByNombreMarca(String nombre);
+public interface DetalleCompraRepository extends JpaRepository<DetalleCompraModel, Integer> {
+
+    @Query("select s from DetalleCompraModel s where s.compra = ?1")
+    Collection<DetalleCompraModel> findByModeloMarca(CompraModel compra);
 }

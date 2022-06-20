@@ -1,13 +1,22 @@
 package dsos.compras.tec.ComprasV2.implement;
 
+<<<<<<< Updated upstream:src/main/java/dsos/compras/tec/ComprasV2/implement/ProductoServiceImplement.java
 import dsos.compras.tec.ComprasV2.model.ProductoModel;
 import dsos.compras.tec.ComprasV2.repository.ProductoRepository;
 import dsos.compras.tec.ComprasV2.service.ProductoService;
+=======
+import ito.dsos.compras.model.MarcaModel;
+import ito.dsos.compras.model.ModeloModel;
+import ito.dsos.compras.model.ProductoModel;
+import ito.dsos.compras.repository.ProductoRepository;
+import ito.dsos.compras.service.ProductoService;
+>>>>>>> Stashed changes:src/main/java/ito/dsos/compras/implement/ProductoServiceImplement.java
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +61,11 @@ public class ProductoServiceImplement implements ProductoService {
     public void save(ProductoModel nuevoProducto) {
         productoRepository.save(nuevoProducto);
     }
+    
+    @Override
+    public ProductoModel save2(ProductoModel nuevoProducto) {
+        return productoRepository.save(nuevoProducto);
+    }
 
     @Override
     public void delete(Integer id) {
@@ -62,13 +76,28 @@ public class ProductoServiceImplement implements ProductoService {
     public void update(ProductoModel productoUpdate, Integer id) {
         ProductoModel productoModel = productoRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("El producto no existe"));
-        productoModel.setTalla(productoUpdate.getTalla());
-        productoModel.setModelo(productoUpdate.getModelo());
-        productoModel.setColor(productoUpdate.getColor());
-        productoModel.setMarca(productoUpdate.getMarca());
-        productoModel.setPrecioCompra(productoUpdate.getPrecioCompra());
-        productoModel.setPrecioVenta(productoUpdate.getPrecioVenta());
-        productoModel.setStock(productoUpdate.getStock());
+        if (productoUpdate.getTalla() != null) {
+            productoModel.setTalla(productoUpdate.getTalla());
+        }
+        if (productoUpdate.getModelo() != null) {
+            productoModel.setModelo(productoUpdate.getModelo());
+        }
+        if (productoUpdate.getColor() != null) {
+            productoModel.setColor(productoUpdate.getColor());
+        }
+        if (productoUpdate.getMarca() != null) {
+            productoModel.setMarca(productoUpdate.getMarca());
+        }
+        if (productoUpdate.getPrecioCompra() != null) {
+            productoModel.setPrecioCompra(productoUpdate.getPrecioCompra());
+        }
+        if (productoUpdate.getPrecioVenta() != null) {
+            productoModel.setPrecioVenta(productoUpdate.getPrecioVenta());
+        }
+        if (productoUpdate.getStock() != null) {
+            productoModel.setStock(productoUpdate.getStock());
+        }
+
         productoRepository.save(productoModel);
     }
 
@@ -78,8 +107,30 @@ public class ProductoServiceImplement implements ProductoService {
     }
 
     @Override
+    public Optional<ProductoModel> getByDatos(Double talla, String color, ModeloModel modelo, MarcaModel marca) {
+        return productoRepository.findByDatos(talla, color, modelo, marca);
+    }
+    
+    @Override
     public List<ProductoModel> getAll() {
         return productoRepository.findAll();
     }
-}
 
+    @Override
+    public Collection<ProductoModel> getAllMarca(MarcaModel marca) {
+        return productoRepository.findByMarca(marca);
+    }
+
+    @Override
+    public Collection<ProductoModel> getAllModelo(ModeloModel modelo) {
+        return productoRepository.findByModelo(modelo);
+    }
+
+    @Override
+    public Collection<ProductoModel> getAllModeloMarca(ModeloModel modelo, MarcaModel marca) {
+        return productoRepository.findByModeloMarca(modelo,marca);
+    }
+    
+    
+    
+}
