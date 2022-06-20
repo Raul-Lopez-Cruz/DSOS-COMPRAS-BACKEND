@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dsos.compras.tec.ComprasV2.utils;
+package ito.dsos.compras.utils;
 
 import java.util.LinkedList;
 

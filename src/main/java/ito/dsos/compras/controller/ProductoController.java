@@ -1,12 +1,10 @@
 package ito.dsos.compras.controller;
 
-
 import ito.dsos.compras.authentication.Authentication;
 import ito.dsos.compras.exceptions.ExternalMicroserviceException;
 import ito.dsos.compras.exceptions.UnauthorizedException;
 import ito.dsos.compras.model.*;
 import ito.dsos.compras.service.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,13 +68,11 @@ public class ProductoController {
             response.put("message", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     /**
      * Ontiene todos los modelos con el id indicado
      *
-     * @param idMarca
      * @return
      */
     @GetMapping("/compras/marca/{idMarca}")
@@ -217,26 +213,27 @@ public class ProductoController {
             Optional<ProductoModel> productoModel = productoService.getById(Integer.parseInt(id));
             //check if producto exists
             if (productoModel.isPresent()) {
-                //check if fields are not null
-                if (producto.getPrecioCompra() == null && producto.getStock() == null
-                        && producto.getColor() == null && producto.getMarca() == null
-                        && producto.getTalla() == null && producto.getModelo() == null
-                        && producto.getPrecioVenta() == null) {
-                    response.put("httpCode", 400);
-                    response.put("message", HttpStatus.NOT_FOUND.getReasonPhrase() + ": Uno o más campos están vacíos");
-                    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-                } else {
+                //if attributes are null, they will be set to the previous values
+                if (producto.getPrecioCompra() == null) producto.setPrecioCompra(productoModel.get().getPrecioCompra());
+                if (producto.getStock() == null) producto.setStock(productoModel.get().getStock());
+                if (producto.getColor() == null) producto.setColor(productoModel.get().getColor());
+                if (producto.getMarca() == null) producto.setMarca(productoModel.get().getMarca());
+                if (producto.getTalla() == null) producto.setTalla(productoModel.get().getTalla());
+                if (producto.getModelo() == null) producto.setModelo(productoModel.get().getModelo());
+                if (producto.getPrecioVenta() == null) producto.setPrecioVenta(productoModel.get().getPrecioVenta());
+
                     productoService.update(producto, Integer.parseInt(id));
                     response.put("httpCode", HttpStatus.OK.value());
                     response.put("data", producto);
                     response.put("message", HttpStatus.OK.getReasonPhrase() + ": El producto se ha actualizado correctamente");
                     return new ResponseEntity<>(response, HttpStatus.OK);
-                }
+
             }
             response.put("httpCode", HttpStatus.NOT_FOUND.value());
             response.put("data", null);
             response.put("message", HttpStatus.NOT_FOUND.getReasonPhrase() + ": El producto no existe");
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+
         } catch (UnauthorizedException ex) {
             response.put("httpCode", HttpStatus.UNAUTHORIZED.value());
             response.put("data", ex.toJSON());
@@ -248,12 +245,12 @@ public class ProductoController {
             response.put("data", ex.toJSON());
             response.put("message", HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase());
             return new ResponseEntity<>(response, HttpStatus.SERVICE_UNAVAILABLE);
+
         } catch (Exception ex) {
             response.put("httpCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("message", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     //Actualiza las existencias de un producto
@@ -269,17 +266,17 @@ public class ProductoController {
                 ProductoModel producto = productoModel.get();
                 //if stock is not enough
                 if (producto.getStock() < Integer.parseInt(unidades)) {
-                    response.put("httpCode", 400);
-                    response.put("message", HttpStatus.NOT_FOUND.getReasonPhrase() + ": No hay suficiente stock");
-                    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                    response.put("httpCode", HttpStatus.UNPROCESSABLE_ENTITY.value());
+                    response.put("message", HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase() + ": No hay suficiente stock");
+                    return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_ENTITY);
                 }
                 //if stock is enough, update stock
                 productoService.vender(Integer.parseInt(id), Integer.parseInt(unidades));
-                response.put("httpCode", HttpStatus.OK.value());
                 HashMap<String, Object> data = new HashMap<>();
                 //put into data stock and id
                 data.put("stock", producto.getStock());
                 data.put("id", producto.getIdProducto());
+                response.put("httpCode", HttpStatus.OK.value());
                 response.put("data", data);
                 response.put("message", HttpStatus.OK.getReasonPhrase() + ": Se ha vendido " + unidades + " unidades");
                 return new ResponseEntity<>(response, HttpStatus.OK);
@@ -292,7 +289,7 @@ public class ProductoController {
             response.put("httpCode", HttpStatus.UNAUTHORIZED.value());
             response.put("data", ex.toJSON());
             response.put("message", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 
         } catch (ExternalMicroserviceException ex) {
             response.put("httpCode", HttpStatus.SERVICE_UNAVAILABLE.value());
@@ -319,11 +316,11 @@ public class ProductoController {
                 ProductoModel producto = productoModel.get();
                 //update stock
                 productoService.devolver(Integer.parseInt(id), Integer.parseInt(String.valueOf(unidades)));
-                response.put("httpCode", HttpStatus.OK.value());
                 HashMap<String, Object> data = new HashMap<>();
                 //put into data stock and id
                 data.put("stock", producto.getStock());
                 data.put("id", producto.getIdProducto());
+                response.put("httpCode", HttpStatus.OK.value());
                 response.put("data", data);
                 response.put("message", HttpStatus.OK.getReasonPhrase() + ": Se ha devuelto " + unidades + "unidad(es) al inventario.");
                 return new ResponseEntity<>(response, HttpStatus.OK);
@@ -336,7 +333,7 @@ public class ProductoController {
             response.put("httpCode", HttpStatus.UNAUTHORIZED.value());
             response.put("data", ex.toJSON());
             response.put("message", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 
         } catch (ExternalMicroserviceException ex) {
             response.put("httpCode", HttpStatus.SERVICE_UNAVAILABLE.value());
@@ -373,7 +370,7 @@ public class ProductoController {
             response.put("httpCode", HttpStatus.UNAUTHORIZED.value());
             response.put("data", ex.toJSON());
             response.put("message", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 
         } catch (ExternalMicroserviceException ex) {
             response.put("httpCode", HttpStatus.SERVICE_UNAVAILABLE.value());
@@ -388,6 +385,7 @@ public class ProductoController {
     }
 
 //MODELOS
+
     /**
      * Busca todos los modelos en la base de datos
      *
@@ -463,7 +461,7 @@ public class ProductoController {
             response.put("httpCode", HttpStatus.UNAUTHORIZED.value());
             response.put("data", ex.toJSON());
             response.put("message", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 
         } catch (ExternalMicroserviceException ex) {
             response.put("httpCode", HttpStatus.SERVICE_UNAVAILABLE.value());
@@ -479,11 +477,12 @@ public class ProductoController {
     }
 
     //Actualiza un producto (todos los atributos)
+
     /**
      * Actuliza un modelo
      *
      * @param modelo - datos modelo a actulizar
-     * @param id - id del producto a actulizar
+     * @param id     - id del producto a actulizar
      * @return ResponseEntity caso de exito o fracaso
      */
     @Transactional
@@ -515,7 +514,7 @@ public class ProductoController {
             response.put("httpCode", HttpStatus.UNAUTHORIZED.value());
             response.put("data", ex.toJSON());
             response.put("message", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 
         } catch (ExternalMicroserviceException ex) {
             response.put("httpCode", HttpStatus.SERVICE_UNAVAILABLE.value());
@@ -557,7 +556,7 @@ public class ProductoController {
             response.put("httpCode", HttpStatus.UNAUTHORIZED.value());
             response.put("data", ex.toJSON());
             response.put("message", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 
         } catch (ExternalMicroserviceException ex) {
             response.put("httpCode", HttpStatus.SERVICE_UNAVAILABLE.value());
@@ -654,7 +653,7 @@ public class ProductoController {
             response.put("httpCode", HttpStatus.UNAUTHORIZED.value());
             response.put("data", ex.toJSON());
             response.put("message", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 
         } catch (ExternalMicroserviceException ex) {
             response.put("httpCode", HttpStatus.SERVICE_UNAVAILABLE.value());
@@ -669,11 +668,12 @@ public class ProductoController {
     }
 
     //Actualiza un producto (todos los atributos)
+
     /**
      * Actuliza una marca
      *
      * @param marca - datos producto a actulizar
-     * @param id - id del producto a actulizar
+     * @param id    - id del producto a actulizar
      * @return ResponseEntity caso de exito o fracaso
      */
     @Transactional
@@ -706,7 +706,7 @@ public class ProductoController {
             response.put("httpCode", HttpStatus.UNAUTHORIZED.value());
             response.put("data", ex.toJSON());
             response.put("message", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 
         } catch (ExternalMicroserviceException ex) {
             response.put("httpCode", HttpStatus.SERVICE_UNAVAILABLE.value());
@@ -748,7 +748,7 @@ public class ProductoController {
             response.put("httpCode", HttpStatus.UNAUTHORIZED.value());
             response.put("data", ex.toJSON());
             response.put("message", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 
         } catch (ExternalMicroserviceException ex) {
             response.put("httpCode", HttpStatus.SERVICE_UNAVAILABLE.value());
@@ -762,7 +762,7 @@ public class ProductoController {
         }
     }
 
-//Compras
+    //Compras
     @GetMapping("/compra/")
     public ResponseEntity<HashMap<String, Object>> getAllCompras() {
         response = new HashMap<>();
@@ -783,17 +783,15 @@ public class ProductoController {
         response = new HashMap<>();
         try {
             authentication.auth(request);
-
             if (productosLista != null) {
                 CompraModel compra = new CompraModel();
                 compra.setFechaAdquirido(LocalDateTime.now());
-
                 compra.setTotal(0.0);
                 compraService.save(compra);
                 Optional<CompraModel> compraRt = compraService.getByCompra(compra.getTotal(), compra.getFechaAdquirido());
 
                 for (ProductoModel productoN : productosLista) {
-                    int cantidad = 0;
+                    int cantidad;
                     if (productoN.getPrecioCompra() == null || productoN.getStock() == null
                             || productoN.getColor() == null || productoN.getMarca() == null
                             || productoN.getTalla() == null || productoN.getModelo() == null
@@ -824,27 +822,22 @@ public class ProductoController {
                 }
                 compraService.update(compra, compraRt.get().getIdCompra());
                 Collection dc = detalleCompraService.getAllCompra(compraRt.get());
-
                 List<Object> salida = new ArrayList<>();
                 salida.add(compraRt.get());
                 salida.add(dc);
-
                 response.put("httpCode", HttpStatus.OK.value());
                 response.put("data", salida);
                 response.put("message", HttpStatus.CREATED.getReasonPhrase() + ": La compra se ha creado correctamente");
                 return new ResponseEntity<>(response, HttpStatus.CREATED);
-
             }
             response.put("httpCode", 400);
             response.put("message", HttpStatus.NOT_FOUND.getReasonPhrase() + ": No ingreso ningun producto");
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-
         } catch (UnauthorizedException ex) {
             response.put("httpCode", HttpStatus.UNAUTHORIZED.value());
             response.put("data", ex.toJSON());
             response.put("message", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         } catch (ExternalMicroserviceException ex) {
             response.put("httpCode", HttpStatus.SERVICE_UNAVAILABLE.value());
             response.put("data", ex.toJSON());
@@ -864,18 +857,14 @@ public class ProductoController {
         try {
             Optional<CompraModel> compraRt = compraService.getById(Integer.parseInt(idCompra));
             if (compraRt.isPresent()) {
-
                 Collection dc = detalleCompraService.getAllCompra(compraRt.get());
-
                 List<Object> salida = new ArrayList<>();
                 salida.add(compraRt.get());
                 salida.add(dc);
-
                 response.put("httpCode", HttpStatus.OK.value());
                 response.put("data", salida);
                 response.put("message", HttpStatus.OK.getReasonPhrase() + ": Lista compra");
                 return new ResponseEntity<>(response, HttpStatus.OK);
-
             }
             response.put("httpCode", HttpStatus.NOT_FOUND.value());
             response.put("data", null);

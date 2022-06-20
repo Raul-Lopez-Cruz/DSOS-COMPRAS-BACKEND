@@ -1,4 +1,4 @@
-package dsos.compras.tec.ComprasV2.model;
+package ito.dsos.compras.model;
 
 import javax.persistence.*;
 

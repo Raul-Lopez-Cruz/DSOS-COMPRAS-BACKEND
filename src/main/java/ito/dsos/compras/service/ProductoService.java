@@ -1,12 +1,8 @@
-package dsos.compras.tec.ComprasV2.service;
+package ito.dsos.compras.service;
 
-<<<<<<< Updated upstream:src/main/java/dsos/compras/tec/ComprasV2/service/ProductoService.java
-import dsos.compras.tec.ComprasV2.model.ProductoModel;
-=======
+import ito.dsos.compras.model.ProductoModel;
 import ito.dsos.compras.model.MarcaModel;
 import ito.dsos.compras.model.ModeloModel;
-import ito.dsos.compras.model.ProductoModel;
->>>>>>> Stashed changes:src/main/java/ito/dsos/compras/service/ProductoService.java
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

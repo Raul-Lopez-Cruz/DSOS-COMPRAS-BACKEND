@@ -1,16 +1,10 @@
-package dsos.compras.tec.ComprasV2.implement;
+package ito.dsos.compras.implement;
 
-<<<<<<< Updated upstream:src/main/java/dsos/compras/tec/ComprasV2/implement/ProductoServiceImplement.java
-import dsos.compras.tec.ComprasV2.model.ProductoModel;
-import dsos.compras.tec.ComprasV2.repository.ProductoRepository;
-import dsos.compras.tec.ComprasV2.service.ProductoService;
-=======
-import ito.dsos.compras.model.MarcaModel;
-import ito.dsos.compras.model.ModeloModel;
 import ito.dsos.compras.model.ProductoModel;
 import ito.dsos.compras.repository.ProductoRepository;
 import ito.dsos.compras.service.ProductoService;
->>>>>>> Stashed changes:src/main/java/ito/dsos/compras/implement/ProductoServiceImplement.java
+import ito.dsos.compras.model.MarcaModel;
+import ito.dsos.compras.model.ModeloModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
